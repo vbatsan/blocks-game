@@ -17,9 +17,10 @@ function App({settings, setSettingsAction}) {
                   <FlexWrapper fustify={'center'} direction={'column'} align={'center'} flex={1}>
                       <Controls changeField={setSettingsAction}/>
                       <Notification/>
-                      {settings && <Field settings={settings}/> }
+                      
                   </FlexWrapper>
-                  <FlexWrapper justify={'center'} flex={1}>
+                  <FlexWrapper justify={'space-around'}>
+                  {settings && <Field settings={settings}/> }
                       <Board/>
                   </FlexWrapper>
               </div>

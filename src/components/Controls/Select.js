@@ -6,6 +6,7 @@ const Select = styled.select`
     display: inline-block;
     background: none;
     outline: none;
+    font-size: 18px;
     border-radius: 5px;
     width: 200px;
     padding: 15px;
