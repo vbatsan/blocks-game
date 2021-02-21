@@ -5,8 +5,9 @@ import {
     CLEAR_FIELD,
     USER_INC,
     COMPUTER_INC,
-    SET_BLOCKS, NEW_GAME
+    SET_BLOCKS, NEW_GAME, CHANGE_BLOCK_TYPE, ACTIVE_TO_RED, FILTER_PLAYING_BLOCKS
 } from "./actions/types";
+import {ACTIVE, RED} from "../../../components/Field/blockTypes";
 
 const initialState = {
     isGameStarted: false,
@@ -20,6 +21,7 @@ const initialState = {
     userCount: 0,
     computerCount: 0,
     blocks: [],
+    playingBlocks:[]
 };
 
 export default function reducer (state = initialState, action) {
@@ -69,9 +71,35 @@ export default function reducer (state = initialState, action) {
         case SET_BLOCKS:
             return {
                 ...state,
-                blocks: state.blocks = action.payload
+                blocks: action.payload,
+                playingBlocks: action.payload
             };
-
+        case ACTIVE_TO_RED:
+            return {
+                ...state,
+                blocks: state.blocks.map(item => {
+                    if(item.type === ACTIVE) item.type = RED;
+                    return item
+                }),
+                computerCount: state.blocks.filter(item => item.type === RED).length
+            };
+        case FILTER_PLAYING_BLOCKS:
+            return {
+                ...state,
+                playingBlocks: state.playingBlocks.filter(item => item.id !== action.payload)
+            }
+        case CHANGE_BLOCK_TYPE:
+            return {
+                ...state,
+                blocks: state.blocks.map(item => {
+                    if(item.id === action.payload.id) {
+                       return {
+                           ...item,
+                           type: action.payload.type
+                       }
+                    }else return item;
+                })
+            };
         case NEW_GAME:
             return {
                 ...state,

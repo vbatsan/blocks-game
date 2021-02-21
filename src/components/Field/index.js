@@ -1,38 +1,26 @@
-import React, { useEffect, useRef} from "react";
+import React, { useEffect} from "react";
 import {connect} from "react-redux";
 
 import Block from "./Block"
 import FieldWrapper from "./FieldWrapper";
-import {computerIncAction, setBlocksAction} from "../../store/reducers/app/actions";
-import {ACTIVE, NO_ACTIVE, RED} from "./blockTypes";
+import {computerIncAction, setBlocksAction, changeBlockTypeAction} from "../../store/reducers/app/actions";
+import {ACTIVE, NO_ACTIVE} from "./blockTypes";
 
-function Field({isGameStarted, settings, clearField, computerIncAction, blocks, setBlocksAction}) {
-
-    const args = useRef([])
-    let index = useRef(-1)
+function Field({
+                   isGameStarted,
+                   playingBlocks,
+                   settings,
+                   clearField,
+                   blocks,
+                   setBlocksAction,
+                   changeBlockTypeAction,
+               }) {
 
     function random(max) {
         return Math.floor(Math.random()*max)
-
-    }
-    function changeToRed(block) {
-        block.type = RED
-        computerIncAction()
-    }
-    function generateRandomIndex() {
-        const num  = random(blocks.length)
-        if(!args.current.includes(num) && num !== undefined) {
-            args.current.push(num)
-            index.current = num
-            return
-        }
-        requestAnimationFrame(generateRandomIndex)
-
     }
 
     useEffect(() => {
-        args.current = []
-        index.current = -1
         const arr = [];
         for(let i=0; i < settings.field * settings.field; i++) {
             const blockOptions = {
@@ -45,33 +33,16 @@ function Field({isGameStarted, settings, clearField, computerIncAction, blocks, 
 
     },[settings.field, clearField])
 
-
     useEffect(() => {
-        if(isGameStarted) {
-            const blocksArr = [...blocks]
-
-            const frame = requestAnimationFrame(generateRandomIndex)
-            const internal = setTimeout(() => {
-                const prevBlock = blocksArr[args.current[args.current.length - 2]]
-                if((args.current.length > 0 && prevBlock?.type === ACTIVE)) {
-                   changeToRed(prevBlock)
-                }
-                if(index.current === args.current[args.current.length -1] &&  blocksArr[index.current].type === ACTIVE) {
-                    changeToRed(blocksArr[index.current])
-                    setBlocksAction(blocksArr)
-                }
-
-                blocksArr[index.current].type = ACTIVE
-                setBlocksAction(blocksArr)
-            },settings.delay)
-            return () => {
-                clearTimeout(internal)
-                cancelAnimationFrame(frame)
-            }
+        if(isGameStarted && playingBlocks.length > 0) {
+            const randomIndex = random(playingBlocks.length)
+            const currentBlockId = playingBlocks[randomIndex].id
+            const timer = setTimeout(() => {
+                changeBlockTypeAction({id: currentBlockId, type: ACTIVE})
+            }, settings.delay)
+            return  () =>  clearTimeout(timer)
         }
-
-    }, [blocks, isGameStarted])
-
+    },[playingBlocks,isGameStarted])
 
     return (
             <FieldWrapper blocks={blocks.length}>
@@ -86,11 +57,14 @@ const mapStateToProps = state => ({
     isGameStarted: state.app.isGameStarted,
     clearField: state.app.clearField,
     blocks: state.app.blocks,
+    playingBlocks: state.app.playingBlocks,
+    isGameFinish: state.app.isGameFinish
 })
 
 const stateDispatchToProps = {
     computerIncAction,
     setBlocksAction,
+    changeBlockTypeAction
 }
 
 export default connect(mapStateToProps, stateDispatchToProps)(Field)

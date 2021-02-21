@@ -5,8 +5,9 @@ import {
     CLEAR_FIELD,
     USER_INC,
     COMPUTER_INC,
-    SET_BLOCKS, NEW_GAME,
+    SET_BLOCKS, NEW_GAME, CHANGE_BLOCK_TYPE, ACTIVE_TO_RED, FILTER_PLAYING_BLOCKS,
 } from "./types";
+import {ACTIVE, GREEN} from "../../../../components/Field/blockTypes";
 
 export const setSettingsAction = (payload) => dispatch => (
     dispatch({
@@ -35,17 +36,36 @@ export const clearFieldAction = () => dispatch => (
     })
 )
 
-export const userIncAction = () => dispatch => {
+export const userIncAction = () => ({
+    type: USER_INC
+})
+
+
+export const computerIncAction = () => ({
+    type: COMPUTER_INC
+})
+
+export const changeActiveToRedAction = () => ({
+    type: ACTIVE_TO_RED
+})
+
+export const filterPlayingBlockAction = (payload) => ({
+    type: FILTER_PLAYING_BLOCKS,
+    payload
+})
+
+export const changeBlockTypeAction = (payload) => dispatch => {
+    if(payload.type === ACTIVE) {
+        dispatch(filterPlayingBlockAction(payload.id))
+        dispatch(changeActiveToRedAction())
+    }
+    if(payload.type === GREEN) dispatch(userIncAction())
     dispatch({
-        type: USER_INC
+        type: CHANGE_BLOCK_TYPE,
+        payload
     })
 }
 
-export const computerIncAction = () => dispatch => {
-    dispatch({
-        type: COMPUTER_INC
-    })
-}
 
 export const setBlocksAction = (payload) => dispatch => {
     dispatch({
