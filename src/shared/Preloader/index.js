@@ -33,7 +33,7 @@ const Loader = styled.div`
       border: 3px solid transparent;
       border-top-color: #9370DB;
       -webkit-animation: spin 2s linear infinite;
-      animation: spin 2s linear infinite;
+      animation: ${preloaderAnimation} 2s linear infinite;
       &:after {
       	 content: "";
 		 position: absolute;

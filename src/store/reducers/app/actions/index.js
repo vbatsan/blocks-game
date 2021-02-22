@@ -9,11 +9,11 @@ import {
 } from "./types";
 import {ACTIVE, GREEN} from "../../../../components/Field/blockTypes";
 
-export const setSettingsAction = (payload) => dispatch => (
-    dispatch({
+export const setSettingsAction = (payload) => (
+    {
         type: SET_SETTINGS,
         payload
-    })
+    }
 )
 
 export const startGameAction = (payload) => dispatch => {

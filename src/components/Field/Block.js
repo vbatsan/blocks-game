@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from "styled-components";
-import {connect} from 'react-redux';
+import {useDispatch} from 'react-redux';
 
 import { changeBlockTypeAction} from "../../store/reducers/app/actions";
 
@@ -27,11 +27,12 @@ const StyledBlock = styled.div`
     border: 1px solid black;
 `;
 
- function Block({id, type, changeBlockTypeAction}) {
+ function Block({id, type}) {
+     const dispatch = useDispatch()
 
     function handleClick() {
         if(type === ACTIVE) {
-            changeBlockTypeAction({id, type: GREEN})
+            dispatch(changeBlockTypeAction({id, type: GREEN}))
         }
     }
     return (
@@ -42,9 +43,4 @@ const StyledBlock = styled.div`
     )
 }
 
- const mapStateToProps = state => ({
-     clearField: state.app.clearField,
-     blocks: state.app.blocks
- })
-
-export default connect(mapStateToProps, {changeBlockTypeAction}) (Block)
+export default Block

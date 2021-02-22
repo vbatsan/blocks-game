@@ -1,32 +1,36 @@
 import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 
 import Message from "./Message";
 import {finishGameAction} from "../../store/reducers/app/actions";
+import {
+    computerCountSelector,
+    fieldSizeSelector,
+    isGameFinishSelector,
+    userCountSelector, userNameSelector
+} from "../../store/reducers/app/selectors";
 
-function Notification({user, computer, fieldSize, finishGameAction, isGameFinish, userName}) {
+function Notification() {
+    const userCount = useSelector(userCountSelector)
+    const computerCount = useSelector(computerCountSelector)
+    const fieldSize = useSelector(fieldSizeSelector)
+    const isGameFinish = useSelector(isGameFinishSelector)
+    const userName = useSelector(userNameSelector)
+    const dispatch = useDispatch()
 
      useEffect(() => {
-         if(computer > (fieldSize * fieldSize /2) || user > (fieldSize * fieldSize /2)){
-             finishGameAction()
+         if(computerCount > (fieldSize * fieldSize /2) || userCount > (fieldSize * fieldSize /2)){
+             dispatch(finishGameAction())
          }
-     }, [user, computer])
+     }, [userCount, computerCount])
 
     return isGameFinish &&
         <Message>
-            {user > computer ? userName : 'Computer'} won!
+            {userCount > computerCount ? userName : 'Computer'} won!
         </Message>
 }
 
-const mapStateToProps = state => ({
-    user: state.app.userCount,
-    computer: state.app.computerCount,
-    fieldSize: state.app.settings.field,
-    isGameFinish: state.app.isGameFinish,
-    userName: state.app.userName
-})
-
-export default connect(mapStateToProps, {finishGameAction})(Notification)
+export default Notification
 
 
 

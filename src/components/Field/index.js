@@ -1,20 +1,23 @@
 import React, { useEffect} from "react";
-import {connect} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 
 import Block from "./Block"
 import FieldWrapper from "./FieldWrapper";
-import {computerIncAction, setBlocksAction, changeBlockTypeAction} from "../../store/reducers/app/actions";
+import { setBlocksAction, changeBlockTypeAction} from "../../store/reducers/app/actions";
 import {ACTIVE, NO_ACTIVE} from "./blockTypes";
+import {
+    blocksSelector,
+    clearFieldSelector,
+    isGameStartedSelector,
+    playingBlocksSelector
+} from "../../store/reducers/app/selectors";
 
-function Field({
-                   isGameStarted,
-                   playingBlocks,
-                   settings,
-                   clearField,
-                   blocks,
-                   setBlocksAction,
-                   changeBlockTypeAction,
-               }) {
+function Field({settings}) {
+    const isGameStarted = useSelector(isGameStartedSelector)
+    const playingBlocks = useSelector(playingBlocksSelector)
+    const clearField = useSelector(clearFieldSelector)
+    const blocks = useSelector(blocksSelector)
+    const dispatch = useDispatch()
 
     function random(max) {
         return Math.floor(Math.random()*max)
@@ -29,7 +32,7 @@ function Field({
             }
             arr.push(blockOptions)
         }
-        setBlocksAction(arr)
+        dispatch(setBlocksAction(arr))
 
     },[settings.field, clearField])
 
@@ -38,7 +41,7 @@ function Field({
             const randomIndex = random(playingBlocks.length)
             const currentBlockId = playingBlocks[randomIndex].id
             const timer = setTimeout(() => {
-                changeBlockTypeAction({id: currentBlockId, type: ACTIVE})
+                dispatch(changeBlockTypeAction({id: currentBlockId, type: ACTIVE}))
             }, settings.delay)
             return  () =>  clearTimeout(timer)
         }
@@ -53,18 +56,4 @@ function Field({
     )
 }
 
-const mapStateToProps = state => ({
-    isGameStarted: state.app.isGameStarted,
-    clearField: state.app.clearField,
-    blocks: state.app.blocks,
-    playingBlocks: state.app.playingBlocks,
-    isGameFinish: state.app.isGameFinish
-})
-
-const stateDispatchToProps = {
-    computerIncAction,
-    setBlocksAction,
-    changeBlockTypeAction
-}
-
-export default connect(mapStateToProps, stateDispatchToProps)(Field)
+export default Field

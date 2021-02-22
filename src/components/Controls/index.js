@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react'
-import {connect} from 'react-redux';
+import React, {useState, useEffect, useRef, useCallback} from 'react'
+import {useDispatch} from 'react-redux';
 
 import Select from "./Select";
 import {startGameAction, clearFieldAction, newGameAction} from "../../store/reducers/app/actions";
@@ -8,20 +8,21 @@ import Button from "./Button";
 import Api from "../../service/Api";
 import FlexWrapper from "../../shared/FlexWrapper";
 
-function Controls({changeField,  startGameAction, clearFieldAction, newGameAction}) {
+function Controls({changeField}) {
     const [settings, setSettings] = useState({})
     const [isNewUser, setIsNewUser] = useState(true)
     const [name, setName] = useState('')
     const [isError, setIsError] = useState(false)
-
+    const dispatch = useDispatch()
     const selectRef = useRef()
+    const clearField = useCallback(() => dispatch(clearFieldAction()),[dispatch])
 
     useEffect(() => {
         Api.getSettings()
             .then((res => setSettings(res)))
     },[])
 
-   async function handleButton() {
+    function handleButton() {
         if(name.length < 1) {
             setIsError(true)
             return
@@ -30,8 +31,8 @@ function Controls({changeField,  startGameAction, clearFieldAction, newGameActio
             selectRef.current.style.border = '1px solid red'
             return;
         }
-       await clearFieldAction()
-        startGameAction(name)
+        clearField()
+        dispatch(startGameAction(name))
         setIsNewUser(false)
 
     }
@@ -52,7 +53,7 @@ function Controls({changeField,  startGameAction, clearFieldAction, newGameActio
                     newGameAction()
                     selectRef.current.style.border = '1px solid black'
                     changeField(settings[event.target.value])
-                    clearFieldAction()
+                    clearField()
                 }}
             >
                 <option disabled value={''}>Choose level</option>
@@ -70,15 +71,4 @@ function Controls({changeField,  startGameAction, clearFieldAction, newGameActio
     )
 }
 
-const mapStateToProps = state => ({
-    isGameStarted: state.app.isGameStarted
-})
-
-const mapDispatchToProps = {
-    startGameAction,
-    clearFieldAction,
-    newGameAction,
-
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Controls)
+export default Controls
