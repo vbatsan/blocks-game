@@ -2,7 +2,7 @@ import axios from 'axios';
 
  class Api {
     getSettings() {
-        return axios("http://starnavi-frontend-test-task.herokuapp.com/game-settings")
+        return axios("https://starnavi-frontend-test-task.herokuapp.com/game-settings")
                 .then((res) => res.data)
     }
 
