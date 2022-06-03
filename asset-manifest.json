@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/blocks-game/static/css/main.90c73f57.chunk.css",
-    "main.js": "/blocks-game/static/js/main.7a61dbb6.chunk.js",
-    "main.js.map": "/blocks-game/static/js/main.7a61dbb6.chunk.js.map",
+    "main.js": "/blocks-game/static/js/main.2415927c.chunk.js",
+    "main.js.map": "/blocks-game/static/js/main.2415927c.chunk.js.map",
     "runtime-main.js": "/blocks-game/static/js/runtime-main.cf5bebfb.js",
     "runtime-main.js.map": "/blocks-game/static/js/runtime-main.cf5bebfb.js.map",
     "static/js/2.897085e9.chunk.js": "/blocks-game/static/js/2.897085e9.chunk.js",
@@ -15,6 +15,6 @@
     "static/js/runtime-main.cf5bebfb.js",
     "static/js/2.897085e9.chunk.js",
     "static/css/main.90c73f57.chunk.css",
-    "static/js/main.7a61dbb6.chunk.js"
+    "static/js/main.2415927c.chunk.js"
   ]
 }
