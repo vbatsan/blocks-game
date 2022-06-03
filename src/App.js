@@ -16,16 +16,14 @@ function App() {
     const setSettings = useCallback((payload) => dispatch(setSettingsAction(payload)), [dispatch])
   return (
           <Container>
-              <div className={'main-wrapper'}>
+              <FlexWrapper>
                   <FlexWrapper fustify={'center'} direction={'column'} align={'center'} flex={1}>
                       <Controls changeField={setSettings}/>
                       <Notification/>
+                      {settings && <Field settings={settings}/> }
                   </FlexWrapper>
-                  <FlexWrapper justify={'space-around'}>
-                  {settings && <Field settings={settings}/> }
                       <Board/>
-                  </FlexWrapper>
-              </div>
+              </FlexWrapper>
 
           </Container>
   );
